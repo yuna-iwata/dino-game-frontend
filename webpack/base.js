@@ -14,6 +14,10 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
   },
+  resolve: {
+    extensions: [".js", ".jsx", ".css"], //An empty string is no longer required.
+    modules: ["node_modules"],
+  },
   module: {
     rules: [
       {
