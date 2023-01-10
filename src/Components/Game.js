@@ -19,6 +19,7 @@ var firstTime = true;
 var renderTime = 0;
 const width = 1000;
 const height = 300;
+const scale = 0.5;
 
 class MyGame extends Phaser.Scene {
   constructor() {
@@ -52,13 +53,17 @@ class MyGame extends Phaser.Scene {
     this.speed = 10;
     this.ground = this.add
       .tileSprite(0, height, 100, 26, "ground")
-      .setOrigin(0, 1);
+      .setOrigin(0, 1)
+      .setScale(scale);
 
     startBox = this.physics.add
       .sprite(0, height - 200)
       .setOrigin(0, 1)
       .setImmovable();
-    player = this.physics.add.sprite(0, height, "dino-idle").setOrigin(0, 1);
+    player = this.physics.add
+      .sprite(0, height, "dino-idle")
+      .setOrigin(0, 1)
+      .setScale(scale);
 
     player.setCollideWorldBounds(true);
     player.setGravityY(3000);
@@ -97,13 +102,13 @@ class MyGame extends Phaser.Scene {
         callbackScope: this,
         callback: () =>{
           player.anims.play("dino-run-anim", true);
-          if(this.ground.width<width){
+          if(this.ground.width<width/scale){
             if (player.body.deltaAbsY() == 0) {
               this.ground.width += width / 40;
               player.setVelocityY(300)
             }
           } else{
-            this.ground.width = width
+            this.ground.width = width/scale
             runGame = true
             player.setVelocityY(0);
             expandGround.remove()
@@ -125,16 +130,16 @@ class MyGame extends Phaser.Scene {
       `cacti${obstacleNum}`
     );
     obstacle.body.offset.y = 10;
-    obstacle.setOrigin(0, 1).setImmovable();
+    obstacle.setOrigin(0, 1).setImmovable().setScale(scale);
   }
 
   keyCommands() {
     if (cursors.down.isDown) {
-      player.body.height = 58;
+      player.body.height = 58 * scale;
       player.body.offset.y = 34;
     }
     if (cursors.up.isDown) {
-      player.body.height = 92;
+      player.body.height = 92 * scale;
       player.body.offset.y = 0;
     }
 
@@ -142,7 +147,7 @@ class MyGame extends Phaser.Scene {
       player.anims.stop();
       player.setTexture("dino-run");
     } else {
-      if (player.body.height == 92) {
+      if (player.body.height == 92 * scale) {
         player.anims.play("dino-run-anim", true);
       } else {
         player.anims.play("dino-duck-anim", true);
@@ -152,7 +157,7 @@ class MyGame extends Phaser.Scene {
 
   update(time, delta) {
     if (cursors.space.isDown && player.body.onFloor()) {
-      player.body.height = 92;
+      player.body.height = 92 * scale;
       player.body.offset.y = 0;
       player.setVelocityY(-1000);
       console.log("jump");
@@ -161,7 +166,7 @@ class MyGame extends Phaser.Scene {
     if (runGame) {
       this.ground.tilePositionX += this.speed;
       //**********OBSTACLES********//
-      Phaser.Actions.IncX(obstacles.getChildren(), -this.speed);
+      Phaser.Actions.IncX(obstacles.getChildren(), -this.speed * scale);
       renderTime += delta * this.speed * 0.08;
       console.log(renderTime);
       const timeBetweenObstacles = Math.floor(Math.random() * 1000 + 800);
