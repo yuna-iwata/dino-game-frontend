@@ -3,9 +3,9 @@ import backgroundImg from "../assets/background.png";
 import groundImg from "../assets/ground.png";
 import dinoImg from "../assets/dino-idle.png";
 import starImg from "../assets/star.png";
-import bombImg from "../assets/bomb.png";
 
 var player;
+var cursors;
 const width = 800;
 const height = 600;
 
@@ -18,7 +18,6 @@ class MyGame extends Phaser.Scene {
     this.load.image("background", backgroundImg);
     this.load.image("ground", groundImg);
     this.load.image("star", starImg);
-    this.load.image("bomb", bombImg);
     this.load.image("dino-idle", dinoImg);
   }
 
@@ -34,18 +33,23 @@ class MyGame extends Phaser.Scene {
     player.setCollideWorldBounds(true);
     player.setGravityY(3000);
 
-    this.jump();
-    // this.physics.add.collider(player, platforms);
-  }
+    cursors = this.input.keyboard.createCursorKeys();
 
-  jump() {
-    this.input.keyboard.on("keydown_SPACE", () => {
-      player.setVelocityY(-1000);
+    // this.physics.add.collider(player, platforms);
+    this.anims.create({
+      key: "right",
+      frames: this.anims.generateFrameNumbers("dude", { start: 5, end: 8 }),
+      frameRate: 10,
+      repeat: -1,
     });
   }
 
   update() {
     this.ground.tilePositionX += this.speed;
+    if (cursors.space.isDown) {
+      player.setVelocityY(-330);
+      console.log("jump");
+    }
   }
 }
 
