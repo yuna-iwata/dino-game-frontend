@@ -2,6 +2,8 @@ import Phaser from "phaser";
 import backgroundImg from "../assets/background.png";
 import groundImg from "../assets/ground.png";
 import dinoImg from "../assets/dino-idle.png";
+import dinorunImg from "../assets/dino-run.png";
+import dinoduckImg from "../assets/dino-duck.png";
 import starImg from "../assets/star.png";
 
 var player;
@@ -19,6 +21,14 @@ class MyGame extends Phaser.Scene {
     this.load.image("ground", groundImg);
     this.load.image("star", starImg);
     this.load.image("dino-idle", dinoImg);
+    this.load.spritesheet("dino-run", dinorunImg, {
+      frameWidth: 88,
+      frameHeight: 94,
+    });
+    this.load.spritesheet("dino-duck", dinoduckImg, {
+      frameWidth: 118,
+      frameHeight: 94,
+    });
   }
 
   create() {
@@ -33,22 +43,52 @@ class MyGame extends Phaser.Scene {
     player.setCollideWorldBounds(true);
     player.setGravityY(3000);
 
-    cursors = this.input.keyboard.createCursorKeys();
-
-    // this.physics.add.collider(player, platforms);
     this.anims.create({
-      key: "right",
-      frames: this.anims.generateFrameNumbers("dude", { start: 5, end: 8 }),
+      key: "dino-run-anim",
+      frames: this.anims.generateFrameNumbers("dino-run", {
+        start: 2,
+        end: 3,
+      }),
       frameRate: 10,
       repeat: -1,
     });
+    this.anims.create({
+      key: "dino-duck-anim",
+      frames: this.anims.generateFrameNumbers("dino-duck", {
+        start: 0,
+        end: 1,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    cursors = this.input.keyboard.createCursorKeys();
+
+    // this.physics.add.collider(player, platforms);
   }
 
   update() {
     this.ground.tilePositionX += this.speed;
-    if (cursors.space.isDown) {
-      player.setVelocityY(-330);
+    if (cursors.space.isDown && player.body.onFloor()) {
+      player.body.height = 92;
+      player.body.offset.y = 0;
+      player.setVelocityY(-1000);
       console.log("jump");
+    }
+    if (cursors.down.isDown) {
+      player.body.height = 58;
+      player.body.offset.y = 34;
+    }
+    if (cursors.up.isDown) {
+      player.body.height = 92;
+      player.body.offset.y = 0;
+    }
+
+    if (player.body.deltaAbsY() > 0) {
+      player.anims.stop();
+      player.setTexture("dino-run");
+    } else {
+      player.anims.play("dino-run-anim", true);
     }
   }
 }
@@ -60,7 +100,7 @@ const config = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: false,
+      debug: true,
     },
   },
   width: 800,
