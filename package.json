@@ -36,9 +36,15 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.4",
+    "@mui/styled-engine-sc": "^5.11.0",
     "babel-preset-react": "^6.24.1",
     "path": "^0.12.7",
     "phaser": "^3.50.0",
-    "react-router-dom": "^6.6.1"
+    "react-router-dom": "^6.6.1",
+    "styled-components": "^5.3.6"
   }
 }
