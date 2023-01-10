@@ -15,6 +15,7 @@ var cursors;
 var startBox;
 var obstacles;
 var runGame = false;
+var firstTime = true;
 var renderTime = 0;
 const width = 1000;
 const height = 300;
@@ -116,6 +117,7 @@ class MyGame extends Phaser.Scene {
   renderObstacles() {
     const obstacleNum = Math.floor(Math.random() * 6 + 1);
     const distanceBetween = Phaser.Math.Between(600, 900);
+    console.log(obstacleNum);
     let obstacle;
     obstacle = obstacles.create(
       width + distanceBetween,
@@ -161,9 +163,16 @@ class MyGame extends Phaser.Scene {
       //**********OBSTACLES********//
       Phaser.Actions.IncX(obstacles.getChildren(), -this.speed);
       renderTime += delta * this.speed * 0.08;
-      if (renderTime >= 1500) {
+      console.log(renderTime);
+      const timeBetweenObstacles = Math.floor(Math.random() * 1000 + 800);
+      if (renderTime >= 1500 && firstTime) {
         this.renderObstacles();
         renderTime = 0;
+        firstTime = false;
+      } else if (renderTime >= timeBetweenObstacles && !firstTime) {
+        this.renderObstacles();
+        renderTime = 0;
+        firstTime = false;
       }
       this.keyCommands();
     }
