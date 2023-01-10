@@ -8,8 +8,10 @@ import starImg from "../assets/star.png";
 
 var player;
 var cursors;
-const width = 800;
-const height = 600;
+var startBox;
+var runGame = false;
+const width = 1000;
+const height = 300;
 
 class MyGame extends Phaser.Scene {
   constructor() {
@@ -34,10 +36,14 @@ class MyGame extends Phaser.Scene {
   create() {
     this.speed = 10;
     this.ground = this.add
-      .tileSprite(0, height, width, 26, "ground")
+      .tileSprite(0, height, 100, 26, "ground")
       .setOrigin(0, 1);
     // platforms.create(200, 200, "ground").setScale(2).refreshBody();
 
+    startBox = this.physics.add
+      .sprite(0, height - 200)
+      .setOrigin(0, 1)
+      .setImmovable();
     player = this.physics.add.sprite(0, height, "dino-idle").setOrigin(0, 1);
 
     player.setCollideWorldBounds(true);
@@ -64,31 +70,64 @@ class MyGame extends Phaser.Scene {
 
     cursors = this.input.keyboard.createCursorKeys();
 
+    // prettier-ignore
+    this.physics.add.overlap(startBox, player, () => {
+      startBox.disableBody(true,true)
+      const expandGround = this.time.addEvent({
+        delay: 20,
+        loop:true,
+        callbackScope: this,
+        callback: () =>{
+          player.anims.play("dino-run-anim", true);
+          if(this.ground.width<width){
+            if (player.body.deltaAbsY() == 0) {
+              this.ground.width += width / 40;
+              player.setVelocityY(300)
+            }
+          } else{
+            this.ground.width = width
+            runGame = true
+            player.setVelocityY(0);
+            expandGround.remove()
+          
+          }
+        }
+      })
+   
+    }, null, this);
+
     // this.physics.add.collider(player, platforms);
   }
 
   update() {
-    this.ground.tilePositionX += this.speed;
     if (cursors.space.isDown && player.body.onFloor()) {
       player.body.height = 92;
       player.body.offset.y = 0;
       player.setVelocityY(-1000);
       console.log("jump");
     }
-    if (cursors.down.isDown) {
-      player.body.height = 58;
-      player.body.offset.y = 34;
-    }
-    if (cursors.up.isDown) {
-      player.body.height = 92;
-      player.body.offset.y = 0;
-    }
+    if (runGame) {
+      this.ground.tilePositionX += this.speed;
 
-    if (player.body.deltaAbsY() > 0) {
-      player.anims.stop();
-      player.setTexture("dino-run");
-    } else {
-      player.anims.play("dino-run-anim", true);
+      if (cursors.down.isDown) {
+        player.body.height = 58;
+        player.body.offset.y = 34;
+      }
+      if (cursors.up.isDown) {
+        player.body.height = 92;
+        player.body.offset.y = 0;
+      }
+
+      if (player.body.deltaAbsY() > 0) {
+        player.anims.stop();
+        player.setTexture("dino-run");
+      } else {
+        if (player.body.height == 92) {
+          player.anims.play("dino-run-anim", true);
+        } else {
+          player.anims.play("dino-duck-anim", true);
+        }
+      }
     }
   }
 }
@@ -103,8 +142,8 @@ const config = {
       debug: true,
     },
   },
-  width: 800,
-  height: 600,
+  width: 1000,
+  height: 300,
   scene: MyGame,
 };
 
