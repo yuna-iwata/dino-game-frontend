@@ -6,7 +6,7 @@ export default function LeaderboardPage({ rowList }) {
   return (
     <div>
       <Cover />
-      <Leaderboard rowList={rowList} />
+      <Leaderboard />
     </div>
   );
 }

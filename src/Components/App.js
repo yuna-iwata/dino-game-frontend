@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import GamePage from "../Pages/GamePage";
 import React from "react";
 import Header from "./header.jsx";
-import LeaderboardPage from "../Pages/LeaderboardPage";
+import LeaderboardPage from "../Pages/LeaderboardPage.jsx";
 
 function App() {
   return (
