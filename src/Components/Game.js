@@ -105,12 +105,12 @@ class MyGame extends Phaser.Scene {
           if(this.ground.width<width/scale){
             if (player.body.deltaAbsY() == 0) {
               this.ground.width += width / 40;
-              player.setVelocityY(300)
+              player.setVelocityX(50)
             }
           } else{
             this.ground.width = width/scale
             runGame = true
-            player.setVelocityY(0);
+            player.setVelocityX(0);
             expandGround.remove()
           
           }
@@ -122,7 +122,7 @@ class MyGame extends Phaser.Scene {
   renderObstacles() {
     const obstacleNum = Math.floor(Math.random() * 6 + 1);
     const distanceBetween = Phaser.Math.Between(600, 900);
-    console.log(obstacleNum);
+    console.log(distanceBetween);
     let obstacle;
     obstacle = obstacles.create(
       width + distanceBetween,
@@ -168,7 +168,6 @@ class MyGame extends Phaser.Scene {
       //**********OBSTACLES********//
       Phaser.Actions.IncX(obstacles.getChildren(), -this.speed * scale);
       renderTime += delta * this.speed * 0.08;
-      console.log(renderTime);
       const timeBetweenObstacles = Math.floor(Math.random() * 1000 + 800);
       if (renderTime >= 1500 && firstTime) {
         this.renderObstacles();
