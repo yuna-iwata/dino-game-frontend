@@ -105,12 +105,12 @@ class MyGame extends Phaser.Scene {
           if(this.ground.width<width/scale){
             if (player.body.deltaAbsY() == 0) {
               this.ground.width += width / 40;
-              player.setVelocityY(300)
+              player.setVelocityX(50)
             }
           } else{
             this.ground.width = width/scale
             runGame = true
-            player.setVelocityY(0);
+            player.setVelocityX(0);
             expandGround.remove()
           
           }
