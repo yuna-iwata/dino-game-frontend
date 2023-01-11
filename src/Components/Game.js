@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import groundImg from "../assets/ground.png";
 import dinoImg from "../assets/dino-idle.png";
+import dinohurtImg from "../assets/dino-hurt.png";
 import dinorunImg from "../assets/dino-run.png";
 import dinoduckImg from "../assets/dino-duck.png";
 import bigcactiOneImg from "../assets/bigcacti-1.png";
@@ -15,8 +16,9 @@ var cursors;
 var startBox;
 var obstacles;
 var runGame = false;
-var firstTime = true;
 var renderTime = 0;
+var obstaclesRendered = 0;
+var timeBetweenObstacles = 0;
 const width = 1000;
 const height = 300;
 const scale = 0.5;
@@ -30,6 +32,7 @@ class MyGame extends Phaser.Scene {
     //**********LOAD IMAGES********//
     this.load.image("ground", groundImg);
     this.load.image("dino-idle", dinoImg);
+    this.load.image("dino-hurt", dinohurtImg);
     //**********LOAD SPRITEs********//
     this.load.spritesheet("dino-run", dinorunImg, {
       frameWidth: 88,
@@ -105,12 +108,12 @@ class MyGame extends Phaser.Scene {
           if(this.ground.width<width/scale){
             if (player.body.deltaAbsY() == 0) {
               this.ground.width += width / 40;
-              player.setVelocityY(300)
+              player.setVelocityX(60)
             }
           } else{
             this.ground.width = width/scale
             runGame = true
-            player.setVelocityY(0);
+            player.setVelocityX(0);
             expandGround.remove()
           
           }
@@ -118,17 +121,20 @@ class MyGame extends Phaser.Scene {
       })
    
     }, null, this);
+    this.createColliders();
   }
+  createColliders() {
+    // prettier-ignore
+    this.physics.add.collider(player, obstacles, () => {
+        runGame = false
+        player.setTexture('dino-hurt')
+        this.anims.pauseAll()
+    }, null, this);
+  }
+
   renderObstacles() {
     const obstacleNum = Math.floor(Math.random() * 6 + 1);
-    const distanceBetween = Phaser.Math.Between(600, 900);
-    console.log(obstacleNum);
-    let obstacle;
-    obstacle = obstacles.create(
-      width + distanceBetween,
-      height,
-      `cacti${obstacleNum}`
-    );
+    let obstacle = obstacles.create(width, height, `cacti${obstacleNum}`);
     obstacle.body.offset.y = 10;
     obstacle.setOrigin(0, 1).setImmovable().setScale(scale);
   }
@@ -169,15 +175,18 @@ class MyGame extends Phaser.Scene {
       Phaser.Actions.IncX(obstacles.getChildren(), -this.speed * scale);
       renderTime += delta * this.speed * 0.08;
       console.log(renderTime);
-      const timeBetweenObstacles = Math.floor(Math.random() * 1000 + 800);
-      if (renderTime >= 1500 && firstTime) {
+      console.log("time between");
+      console.log(timeBetweenObstacles);
+      if (renderTime >= 1300 && obstaclesRendered == 0) {
+        console.log("first");
+        timeBetweenObstacles = Math.floor(Math.random() * 1300) + 500;
         this.renderObstacles();
+        obstaclesRendered += 1;
         renderTime = 0;
-        firstTime = false;
-      } else if (renderTime >= timeBetweenObstacles && !firstTime) {
+      } else if (renderTime >= timeBetweenObstacles && obstaclesRendered > 0) {
         this.renderObstacles();
+        timeBetweenObstacles = Math.floor(Math.random() * 1300) + 500;
         renderTime = 0;
-        firstTime = false;
       }
       this.keyCommands();
     }
