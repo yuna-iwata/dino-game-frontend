@@ -1,7 +1,7 @@
 import React from "react";
 import Card from "@mui/material/Card";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import dinoBg from "./dinobg.jpg";
+import dinoBg from "../assets/dinoBg.jpg";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { createTheme, ThemeProvider } from "@mui/material/styles";

@@ -7,14 +7,14 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import { CardHeader } from "@mui/material";
-import dino from "./dino-idle.png";
+import dino from "../assets/dino-logo.png";
 
 export default function Leaderboard({ rowList }) {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 200 }} aria-label="simple table">
         <TableBody>
-          {/* ---- example ----
+          {/* ---- example ---- *
           <TableRow
             key="1"
             sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -30,7 +30,7 @@ export default function Leaderboard({ rowList }) {
             </TableCell>
             <TableCell align="center">9999</TableCell>
           </TableRow>
- */}
+           */}
 
           {rowList.map((row) => (
             <TableRow
