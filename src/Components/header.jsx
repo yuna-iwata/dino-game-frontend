@@ -36,12 +36,12 @@ export default function Header() {
           <Typography
             placement="left-start"
             component="div"
-            sx={{ flexGrow: 1, color: "#6c6c6c", align: "center" }}
+            sx={{ flexGrow: 1, color: "#6c6c6c" }}
           >
             Username
           </Typography>
 
-          {/* <Grid container placement="top">
+          <Grid container placement="top">
             <Typography
               variant="h5"
               component="div"
@@ -49,7 +49,7 @@ export default function Header() {
             >
               Dino game
             </Typography>
-          </Grid> */}
+          </Grid>
 
           <Tooltip title="Leaderboard" placement="right-start">
             <IconButton size="large" color="inherit">
