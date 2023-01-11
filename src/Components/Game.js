@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import groundImg from "../assets/ground.png";
 import dinoImg from "../assets/dino-idle.png";
+import dinohurtImg from "../assets/dino-hurt.png";
 import dinorunImg from "../assets/dino-run.png";
 import dinoduckImg from "../assets/dino-duck.png";
 import bigcactiOneImg from "../assets/bigcacti-1.png";
@@ -31,6 +32,7 @@ class MyGame extends Phaser.Scene {
     //**********LOAD IMAGES********//
     this.load.image("ground", groundImg);
     this.load.image("dino-idle", dinoImg);
+    this.load.image("dino-hurt", dinohurtImg);
     //**********LOAD SPRITEs********//
     this.load.spritesheet("dino-run", dinorunImg, {
       frameWidth: 88,
@@ -119,12 +121,20 @@ class MyGame extends Phaser.Scene {
       })
    
     }, null, this);
+    this.createColliders();
   }
+  createColliders() {
+    // prettier-ignore
+    this.physics.add.collider(player, obstacles, () => {
+        runGame = false
+        player.setTexture('dino-hurt')
+        this.anims.pauseAll()
+    }, null, this);
+  }
+
   renderObstacles() {
     const obstacleNum = Math.floor(Math.random() * 6 + 1);
-    const distanceBetween = Phaser.Math.Between(600, 900);
-    let obstacle;
-    obstacle = obstacles.create(width, height, `cacti${obstacleNum}`);
+    let obstacle = obstacles.create(width, height, `cacti${obstacleNum}`);
     obstacle.body.offset.y = 10;
     obstacle.setOrigin(0, 1).setImmovable().setScale(scale);
   }
@@ -167,15 +177,15 @@ class MyGame extends Phaser.Scene {
       console.log(renderTime);
       console.log("time between");
       console.log(timeBetweenObstacles);
-      if (renderTime >= 1500 && obstaclesRendered == 0) {
+      if (renderTime >= 1300 && obstaclesRendered == 0) {
         console.log("first");
-        timeBetweenObstacles = Math.floor(Math.random() * 1500) + 500;
+        timeBetweenObstacles = Math.floor(Math.random() * 1300) + 500;
         this.renderObstacles();
         obstaclesRendered += 1;
         renderTime = 0;
       } else if (renderTime >= timeBetweenObstacles && obstaclesRendered > 0) {
         this.renderObstacles();
-        timeBetweenObstacles = Math.floor(Math.random() * 1500) + 500;
+        timeBetweenObstacles = Math.floor(Math.random() * 1300) + 500;
         renderTime = 0;
       }
       this.keyCommands();
